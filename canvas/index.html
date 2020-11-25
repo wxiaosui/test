@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canv </title>
+</head>
+
+<body>
+</body>
+<script>
+    function Point(canvas, options) {
+        this.canvas = canvas;
+        this.context = canvas.getContext("2d");
+        options = options || {};
+        this.x = options.x || 0;
+        this.y = options.y || 0;
+        this.radius = options.radius || 1;
+        // x轴的速度
+        this.vx = options.vx || 0;
+        // y轴的速度
+        this.vy = options.vy || 0;
+        this.color = options.color || '#000000';
+
+        this.draw = function () {
+            this.context.beginPath();
+            this.context.arc(this.x, this.y, this.radius, Math.PI / 180 * 0, Math.PI / 180 * 360);
+            this.context.fillStyle = this.color;
+            this.context.fill();
+        }
+
+        this.update = function () {
+            // 匀速运动
+            this.x += this.vx;
+            this.y += this.vy;
+            // 超出边界反弹
+            if (this.x < 0 || this.x > canvas.width) {
+                this.vx = -this.vx;
+            }
+            if (this.y < 0 || this.y > canvas.height) {
+                this.vy = -this.vy;
+            }
+        }
+    }
+
+    var canvas = document.createElement("canvas")
+    document.body.appendChild(canvas);
+    var context = canvas.getContext('2d');
+    // 设置样式属性
+    canvas.style.position = "fixed";
+    canvas.style.top = 0;
+    canvas.style.left = 0;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.zIndex = "-1";
+
+    var p = new Point(canvas, {
+        x: 20,
+        y: 20,
+        radius: 10,
+    });
+    p.draw();
+</script>
+
+</html>
