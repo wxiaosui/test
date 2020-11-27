@@ -55,12 +55,53 @@
     canvas.height = window.innerHeight;
     canvas.style.zIndex = "-1";
 
-    var p = new Point(canvas, {
-        x: 20,
-        y: 20,
-        radius: 10,
-    });
-    p.draw();
+    var cWidth = canvas.width;
+    var cHeight = canvas.height;
+    var points = [];
+    var pointsLength = 20;
+    var lineMaxLen = 100;
+
+    // 创建点
+    // 创建点
+    for (var i = 0; i < pointsLength; i++) {
+        var p = new Point(canvas, {
+            x: Math.floor(Math.random() * cWidth),
+            y: Math.floor(Math.random() * cHeight),
+            vx: Math.random() * 4 - 2,
+            vy: Math.random() * 4 - 2,
+        })
+        points.push(p);
+    }
+
+    function animate() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (var i = 0; i < points.length; i++) {
+            var p1 = points[i];
+            p1.update();
+            p1.draw();
+            // 划线
+            for (var j = i + 1; j < points.length; j++) {
+                var p2 = points[j];
+                // 勾股定理
+                var l = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+                if (l < lineMaxLen) {
+                    context.beginPath();
+                    context.moveTo(p1.x, p1.y);
+                    context.lineTo(p2.x, p2.y);
+                    // 越远颜色越淡
+                    context.strokeStyle = 'rgba(0,0,0,' + ((lineMaxLen - l) / lineMaxLen) + ')';
+                    context.stroke();
+                }
+            }
+        }
+
+        // 递归调用
+        requestAnimationFrame(animate);
+    }
+
+    // 启动动画
+    requestAnimationFrame(animate);
 </script>
 
 </html>
