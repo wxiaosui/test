@@ -9,7 +9,6 @@
   <style type="text/css">
     #canvas {
       background: #eeeeee;
-      border: 1px solid #000000;
     }
   </style>
 </head>
@@ -23,6 +22,8 @@
     let canvas = document.getElementById('canvas');
     // 获取上下文
     let context = canvas.getContext('2d');
+    var width = canvas.width = window.innerWidth;
+    var height = canvas.height = window.innerHeight;
 
     class Ball {
       constructor(context, options = {}) {
@@ -37,18 +38,15 @@
         this.ay = options.ay || 0;
         this.mass = options.mass || 0; // 质量
         if (this.mass <= 0) {
-          this.mass = 1;
+          this.mass = Math.pow(this.radius, 3) / Math.pow(20, 3);
         }
       }
 
       update() {
-        if (this.vx > 0 || this.vy > 0) {
-          this.vx -= this.ax;
-          this.vy -= this.ay;
-          this.x += this.vx;
-          this.y += this.vy;
-        }
-
+        this.vx += this.ax;
+        this.vy += this.ay;
+        this.x += this.vx;
+        this.y += this.vy;
       }
 
       draw() {
@@ -64,15 +62,14 @@
     let colors = ['red', 'blue', 'yellow', 'green', 'orange'];
     for (let i = 0; i < 20; i++) {
       balls.push(new Ball(context, {
-        x: (i + 1) * 50,
-        y: 190,
+        x: width / 2,
+        y: height / 2,
         radius: Math.floor(Math.random() * 10 + 15),
         vx: Math.random() * 6 - 3,
         vy: Math.random() * 6 - 3,
         color: colors[Math.floor(Math.random() * colors.length)],
       }));
     }
-    console.log(balls)
 
     function checkWalls(ball) {
       // 边界反弹
@@ -155,6 +152,16 @@
         ball0.vy = vel0F.y;
         ball1.vx = vel1F.x;
         ball1.vy = vel1F.y;
+      } else {
+        ball0.vx = 0;
+        ball0.ax = 0;
+        ball0.vy = 0;
+        ball0.ay = 0;
+
+        ball1.vx = 0;
+        ball1.ax = 0;
+        ball1.vy = 0;
+        ball1.ay = 0;
       }
     }
 
@@ -170,18 +177,23 @@
         checkWalls(ball);
       });
 
-
-      for (let i = 0; i < balls.length - 1; i++) {
-        for (let j = i + 1; j < balls.length; j++) {
-          checkCollision(balls[i], balls[j]);
+      const timer = setTimeout(function fun() {
+        for (let i = 0; i < balls.length - 1; i++) {
+          for (let j = i + 1; j < balls.length; j++) {
+            checkCollision(balls[i], balls[j]);
+          }
         }
-      }
+      }, 1000)
+
+
+
 
       // 绘制
       balls.forEach(draw);
     }
 
     animate();
+    //https://www.kai666666.top/2019/06/30/Canvas%E7%B3%BB%E5%88%97%EF%BC%8811%EF%BC%89%EF%BC%9A%E5%8A%A8%E7%94%BB%E4%B8%AD%E7%BA%A7/
   </script>
 </body>
 
