@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .main {
+      width: 100%;
+      line-height: 800px;
+      text-align: center;
+    }
+
+    .icon_checkbox {
+      position: relative;
+      appearance: none;
+      cursor: pointer;
+      transition: all 100ms;
+      border-radius: 31px;
+      width: 102px;
+      height: 62px;
+      background-color: #e9e9eb;
+    }
+
+    .icon_checkbox::after {
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      border-radius: 27px;
+      width: 54px;
+      height: 54px;
+      background-color: #ffffff;
+      box-shadow: 1px 1px 5px rgba(#000, .3);
+      content: "";
+      transition: all 300ms cubic-bezier(.4, .4, .25, 1.35);
+    }
+
+    .icon_checkbo::before {
+      position: absolute;
+      content: "";
+      transition: all 300ms cubic-bezier(.45, 1, .4, 1);
+      border-radius: 31px;
+      width: 102px;
+      height: 62px;
+      background-color: #e9e9eb;
+    }
+
+    .icon_checkbox:checked {
+      background-color: #5eb662;
+    }
+
+    .icon_checkbox:checked::before {
+      transform: scale(0);
+    }
+
+    .icon_checkbox:checked::after {
+      transform: translateX(40px);
+    }
+  </style>
+</head>
+
+<body>
+  <input type="checkbox" class="icon_checkbox">
+  <div class="main">body</div>
+  <canvas></canvas>
+</body>
+<script>
+  (function () {
+    let balls = []
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+    var width = canvas.width = window.innerWidth;
+    var height = canvas.height = window.innerHeight;
+
+    function random(min, max) {
+      var num = Math.floor(Math.random() * (max - min)) + min;
+      return num;
+    }
+
+    function randomColor() {
+      return "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math
+        .random() * 256) + ")";
+    }
+    //绘制小球
+    function Ball(x, y, velX, velY, color, size) {
+      this.x = x; //最开始的坐标
+      this.y = y;
+      this.velX = velX; //水平和竖直速度
+      this.velY = velY;
+      this.color = color;
+      this.size = size;
+    }
+    // draw 方法
+    Ball.prototype.draw = function () {
+      ctx.beginPath();
+      ctx.fillStyle = this.color; //fill填充;stroke 路径
+      ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI); //画圆
+      ctx.fill();
+    };
+    //update
+    Ball.prototype.update = function () {
+      this.x = this.x-this.velX
+      this.y = this.y-this.velY
+    }
+
+    function loop() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+      ctx.fillRect(0, 0, width, height);
+
+      while (balls.length < 25) {
+        var ball = new Ball(
+          width/2,height/2,
+          random(-4,4),
+          random(-4,4),
+          'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) + ')',
+          random(5, width / 20)
+        );
+        balls.push(ball);
+      }
+
+      for (var i = 0; i < balls.length; i++) {
+        balls[i].draw();
+        balls[i].update();
+        // balls[i].collisionDetect();
+      }
+
+      requestAnimationFrame(loop);
+      //window.requestAnimationFrame() 
+      //方法告诉浏览器您希望执行动画并请求浏览器调用指定的函数在下一次重绘之前更新动画。
+      //该方法使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用。
+    }
+
+    loop();
+  })()
+</script>
+
+</html>
