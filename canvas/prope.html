@@ -79,8 +79,8 @@
     }
 
     function randomColor() {
-      return "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math
-        .random() * 256) + ")";
+      return "rgba(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math
+        .random() * 256) + ", 0.5)";
     }
     //绘制小球
     function Ball(x, y, velX, velY, color, size) {
@@ -113,7 +113,7 @@
           width/2,height/2,
           random(-4,4),
           random(-4,4),
-          'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) + ')',
+          randomColor(),
           random(5, width / 20)
         );
         balls.push(ball);
